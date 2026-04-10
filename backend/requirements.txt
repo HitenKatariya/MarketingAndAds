@@ -1,0 +1,51 @@
+# Core Framework
+fastapi==0.115.11
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.1
+asyncpg==0.30.0
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.1
+
+# Task Queue (Async Processing)
+celery==5.4.0
+redis==5.2.1
+
+# AI & ML APIs
+huggingface-hub==0.27.1
+replicate==1.0.6
+requests==2.32.3
+aiohttp==3.11.11
+
+# Cloud Storage
+boto3==1.35.76  # For AWS S3
+cloudinary==1.41.0
+
+# Data Validation & Serialization
+pydantic==2.10.4
+pydantic-settings==2.7.0
+email-validator==2.2.0
+
+# Utilities
+httpx==0.28.1
+pillow==11.0.0
+python-dateutil==2.9.0
+uuid6==2024.1.12
+
+# Monitoring & Logging
+loguru==0.7.3
+prometheus-fastapi-instrumentator==7.0.0
+
+# Development & Testing (optional - install with pip install -r requirements-dev.txt)
+pytest==8.3.4
+pytest-asyncio==0.24.0
+black==24.10.0
+isort==5.13.2
+flake8==7.1.1
