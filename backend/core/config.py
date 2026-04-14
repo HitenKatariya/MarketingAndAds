@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,10 +19,19 @@ class Settings(BaseSettings):
     app_host: str = "127.0.0.1"
     app_port: int = 8000
     request_timeout_seconds: int = 60
+    hf_inference_base_url: str = "https://router.huggingface.co/hf-inference/models"
 
-    huggingface_api_key: str = ""
-    text_model_id: str = "mistralai/Mistral-7B-Instruct-v0.2"
-    image_model_id: str = "stabilityai/stable-diffusion-xl-base-1.0"
+    huggingface_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices(
+            "HUGGINGFACE_API_KEY",
+            "HF_TOKENS",
+            "HF_TOKEN",
+            "huggingface_api_key",
+        ),
+    )
+    text_model_id: str = "google/flan-t5-large"
+    image_model_id: str = "runwayml/stable-diffusion-v1-5"
 
     outputs_dir: Path = BASE_DIR / "outputs"
     images_dir: Path = BASE_DIR / "outputs" / "images"
@@ -35,3 +45,7 @@ settings = Settings()
 settings.outputs_dir.mkdir(parents=True, exist_ok=True)
 settings.images_dir.mkdir(parents=True, exist_ok=True)
 settings.json_dir.mkdir(parents=True, exist_ok=True)
+
+
+def backend_mode() -> str:
+    return "online" if settings.huggingface_api_key.strip() else "offline"

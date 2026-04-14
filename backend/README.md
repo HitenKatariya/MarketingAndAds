@@ -11,6 +11,7 @@ This backend is built with FastAPI and follows the architecture in `docs/BACKEND
 - `GET /history`
 - `DELETE /delete/{generation_id}`
 - `GET /health`
+- `GET /static/images/{file_name}` for generated image previews
 
 ## Setup
 
@@ -37,6 +38,18 @@ This backend is built with FastAPI and follows the architecture in `docs/BACKEND
 Swagger docs are available at:
 
 - `http://127.0.0.1:8000/docs`
+
+## Streamlit Client
+
+A simple Streamlit client is available at the repository root:
+
+- `streamlit_app.py`
+
+Run this client after the API is running:
+
+```bash
+streamlit run streamlit_app.py
+```
 
 ## Output Storage
 

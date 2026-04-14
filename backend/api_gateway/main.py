@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from api_gateway.routers import posts
-from core.config import settings
+from core.config import backend_mode, settings
+from core.huggingface_client import hf_client
 
 try:
     from prometheus_fastapi_instrumentator import Instrumentator
@@ -25,11 +27,22 @@ app.add_middleware(
 )
 
 app.include_router(posts.router)
+app.mount("/static", StaticFiles(directory=settings.outputs_dir), name="static")
 
 if Instrumentator is not None:
     Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/health", tags=["Health"])
-async def health_check() -> dict[str, str]:
-    return {"status": "ok"}
+async def health_check() -> dict[str, str | dict[str, str]]:
+    return {
+        "status": "ok",
+        "mode": backend_mode(),
+        "hf_configured": "yes" if settings.huggingface_api_key.strip() else "no",
+        "hf": hf_client.diagnostics(),
+    }
+
+
+@app.get("/diagnostics/huggingface", tags=["Health"])
+async def huggingface_diagnostics() -> dict[str, str]:
+    return hf_client.diagnostics()

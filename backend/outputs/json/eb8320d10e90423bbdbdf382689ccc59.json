@@ -1,0 +1,16 @@
+{
+  "id": "eb8320d10e90423bbdbdf382689ccc59",
+  "prompt": "Red chilly pizza with oregano spray for my cafe",
+  "enhanced_prompt": "High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product idea: Rewrite this idea as a concise marketing-grade visual prompt for image generation. Include composition, lighting, mood, realism, and brand-friendly tone. User idea: Red chilly pizza with oregano spray for my cafe",
+  "caption": "High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product idea: Create one engaging social media caption (max 280 chars) and relevant hashtags. Output as plain text with hashtags included at the end. Topic: High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product idea: Rewrite this idea as a concise marketing-grade visual prompt for image generation. Include composition, lighting, mood, realism, and brand-friendly tone. User idea: Red chilly pizza with oregano spray for my cafe",
+  "hashtags": [
+    "#marketing",
+    "#smallbusiness",
+    "#branding"
+  ],
+  "images": [
+    "outputs/images/32fca1841da244aba504116fa2c3fdbf.png",
+    "outputs/images/9004b565508f43f08ef7a57d0d0b2384.png"
+  ],
+  "created_at": "2026-04-10T14:14:57.076738+00:00"
+}
