@@ -1,6 +1,7 @@
 import asyncio
 from typing import Literal
 
+from core.config import settings
 from core.huggingface_client import hf_client
 from utils.file_storage import save_image_bytes
 
@@ -16,10 +17,12 @@ SIZE_TO_DIMENSIONS: dict[SizeType, tuple[int, int]] = {
 
 async def generate_images(prompt: str, size: SizeType, num_images: int) -> list[str]:
     width, height = SIZE_TO_DIMENSIONS[size]
+    model_id = settings.image_model_id
 
     async def _generate_one(index: int) -> str:
         content = await hf_client.generate_image(
-            prompt=f"{prompt}. Variation {index + 1}",
+            prompt=f"{prompt}. High quality, professional, detailed.",
+            model_id=model_id,
             width=width,
             height=height,
         )

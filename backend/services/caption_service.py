@@ -1,5 +1,6 @@
 import re
 
+from core.config import settings
 from core.huggingface_client import hf_client
 
 
@@ -17,15 +18,20 @@ def _extract_hashtags(text: str) -> list[str]:
 
 async def generate_caption(prompt: str) -> tuple[str, list[str]]:
     instruction = (
-        "Create one engaging social media caption (max 280 chars) and relevant hashtags. "
-        "Output as plain text with hashtags included at the end. "
-        f"Topic: {prompt}"
+        "Create one engaging social media caption (under 280 characters) and relevant hashtags. "
+        "The caption should be compelling and marketing-focused.\n\n"
+        f"Topic: {prompt}\n\n"
+        "Output format: Caption first, then hashtags at the end."
     )
-    generated = await hf_client.generate_text(instruction, max_new_tokens=130)
+    generated = await hf_client.generate_text(
+        instruction,
+        model_id=settings.caption_model_id,
+        max_new_tokens=150
+    )
     hashtags = _extract_hashtags(generated)
 
     if not hashtags:
-        hashtags = ["#marketing", "#smallbusiness", "#branding"]
+        hashtags = ["#marketing", "#socialmedia", "#content", "#brand", "#creative"]
 
     caption = generated
     for tag in hashtags:
@@ -33,6 +39,6 @@ async def generate_caption(prompt: str) -> tuple[str, list[str]]:
     caption = " ".join(caption.split()).strip(" -\n\t")
 
     if not caption:
-        caption = "Fresh content crafted for your brand."
+        caption = "Check out our latest content! #viral"
 
     return caption, hashtags

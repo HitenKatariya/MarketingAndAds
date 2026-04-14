@@ -8,7 +8,7 @@ from core.huggingface_client import hf_client
 
 try:
     from prometheus_fastapi_instrumentator import Instrumentator
-except ImportError:  # pragma: no cover
+except ImportError:
     Instrumentator = None
 
 
@@ -20,7 +20,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,10 +35,11 @@ if Instrumentator is not None:
 
 @app.get("/health", tags=["Health"])
 async def health_check() -> dict[str, str | dict[str, str]]:
+    from core.config import get_hf_api_key
     return {
         "status": "ok",
         "mode": backend_mode(),
-        "hf_configured": "yes" if settings.huggingface_api_key.strip() else "no",
+        "hf_configured": "yes" if get_hf_api_key() else "no",
         "hf": hf_client.diagnostics(),
     }
 

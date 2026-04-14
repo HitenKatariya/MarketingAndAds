@@ -1,0 +1,16 @@
+{
+  "id": "249455fa5bc546148eb310eff9b2b3d8",
+  "prompt": "Red chilly pizza with onion",
+  "enhanced_prompt": "High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product: Rewrite this idea as a concise marketing-grade visual prompt for image generation. Include composition, lighting, mood, realism, and brand-friendly tone. User idea: Red chilly pizza with onion",
+  "caption": "High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product: Create one engaging social media caption (max 280 chars) and relevant hashtags. Output as plain text with hashtags included at the end. Topic: High-quality social media marketing visual, ultra-detailed, professional lighting, brand-focused composition. Product: Rewrite this idea as a concise marketing-grade visual prompt for image generation. Include composition, lighting, mood, realism, and brand-friendly tone. User idea: Red chilly pizza with onion",
+  "hashtags": [
+    "#marketing",
+    "#smallbusiness",
+    "#branding"
+  ],
+  "images": [
+    "outputs/images/45c55326790d4bf1b04f3927f01e970b.png",
+    "outputs/images/02eba27a11f6470589bc6c511986f10e.png"
+  ],
+  "created_at": "2026-04-14T05:14:11.491147+00:00"
+}

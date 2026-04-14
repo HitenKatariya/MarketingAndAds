@@ -2,48 +2,79 @@ AI Social Media Post Generator is a web application that helps marketers and con
 
 ## The Problem
 
-Creating engaging social media content requires significant time and creative effort. Marketers often struggle to consistently produce high-quality prompts for image generation, craft compelling captions, and generate relevant hashtags that increase post visibility. The process of manually refining ideas into marketing-ready content is time-consuming and can be inconsistent in quality.
+Creating engaging social media content requires significant time and creative effort. Marketers often struggle to consistently produce high-quality prompts for image generation, craft compelling captions, and generate relevant hashtags that increase post visibility.
 
 ## The Solution
 
-This application provides an integrated pipeline that transforms simple ideas into polished social media content. Users input a basic concept or topic, and the system enhances it with marketing context, generates professional captions with strategic hashtags, and produces AI-generated images ready for publication.
+This application provides an integrated pipeline that transforms simple ideas into polished social media content. Users input a basic concept, and the system enhances it with marketing context, generates professional captions with strategic hashtags, and produces AI-generated images.
 
 ## Technology Stack
 
-### Backend
+### Backend (FastAPI)
 - **Language**: Python 3.11
 - **Framework**: FastAPI 0.115.11
-- **ORM**: SQLAlchemy 2.0.36
-- **Database**: PostgreSQL (configured; local file storage in use)
-- **AI/ML**: Hugging Face API (Mistral-7B for text generation, Stable Diffusion XL for image generation)
+- **AI/ML**: Hugging Face Inference API
+  - Text: `google/flan-t5-large`
+  - Image: `stabilityai/stable-diffusion-xl-base-1.0`
+- **Storage**: Local JSON + PNG files
+- **Monitoring**: Prometheus metrics
 
-### Frontend
+### Frontend (React + Vite)
 - **Framework**: React 19.2.4
 - **Build Tool**: Vite 8.0.4
-- **Language**: JavaScript (JSX)
+- **UI**: Custom CSS (dark theme)
+
+### Client App (Streamlit)
+- Python-based UI alternative
+
+## Quick Start
+
+### 1. Backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn api_gateway.main:app --reload
+# API docs at http://127.0.0.1:8000/docs
+```
+
+### 2. React Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+# Opens at http://localhost:5173
+```
+
+### 3. Streamlit Client
+```bash
+streamlit run streamlit_app.py
+```
 
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/health` | Health check |
-| POST | `/enhance-prompt` | Enhance user prompt with marketing context |
-| POST | `/generate-caption` | Generate caption and hashtags |
+| GET | `/health` | Health check with HF diagnostics |
+| POST | `/enhance-prompt` | Enhance prompt with marketing context |
+| POST | `/generate-caption` | Generate caption + hashtags |
 | POST | `/generate-images` | Generate AI images |
-| POST | `/generate-post` | Full pipeline (enhance + caption + images) |
-| GET | `/history` | List all generated posts |
-| DELETE | `/delete/{generation_id}` | Delete a generation |
+| POST | `/generate-post` | Full pipeline (all in one) |
+| GET | `/history` | List all generations |
+| DELETE | `/delete/{id}` | Delete a generation |
 
-API documentation available at `/docs` (Swagger UI) and `/redoc` (ReDoc).
+## Configuration
 
-## Setup
+Edit `backend/.env`:
+```
+HF_TOKENS=your_huggingface_token_here
+```
 
-Navigate to the backend directory, create a virtual environment, install dependencies, configure your Hugging Face API token in `.env`, and run the server with `uvicorn api_gateway.main:app --reload`.
+## Features
 
-## Key Dependencies
-
-- FastAPI, Uvicorn, SQLAlchemy, Pydantic, httpx, huggingface-hub, replicate, loguru, pytest
-
-## Infrastructure Ready
-
-PostgreSQL database, Alembic migrations, Celery/Redis task queue, and Prometheus metrics are available in the stack but require configuration to connect.
+- Prompt enhancement with marketing context
+- Caption generation with hashtag extraction
+- AI image generation (SDXL)
+- Multiple image sizes (1:1, 4:5, 16:9)
+- Generation history with view/delete
+- Offline fallback mode
+- Dark themed UI
