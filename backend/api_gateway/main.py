@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -31,6 +32,35 @@ app.mount("/static", StaticFiles(directory=settings.outputs_dir), name="static")
 
 if Instrumentator is not None:
     Instrumentator().instrument(app).expose(app)
+
+
+@app.middleware("http")
+async def runtime_overrides_middleware(request: Request, call_next):
+    hf_token = request.headers.get("x-hf-token")
+    image_mode = request.headers.get("x-image-mode")
+    reset_tokens = hf_client.push_request_overrides(hf_token=hf_token, image_mode=image_mode)
+    try:
+        response = await call_next(request)
+    finally:
+        hf_client.pop_request_overrides(reset_tokens)
+    return response
+
+
+@app.on_event("startup")
+async def startup_load_models() -> None:
+    # In Docker runtime builds, local transformers may be intentionally absent.
+    # Keep startup non-fatal and allow online/offline fallback behavior.
+    hf_client.ensure_text_model_loaded(fail_fast=False)
+
+
+@app.get("/", tags=["Root"])
+async def root() -> dict[str, str]:
+    return {
+        "message": "AI Social Media Post Generator API",
+        "status": "ok",
+        "health": "/health",
+        "docs": "/docs",
+    }
 
 
 @app.get("/health", tags=["Health"])

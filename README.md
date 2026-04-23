@@ -50,6 +50,24 @@ npm run dev
 streamlit run streamlit_app.py
 ```
 
+## Docker Quick Start
+
+Run the full app (backend + frontend) with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:8000`
+- Backend docs: `http://localhost:8000/docs`
+
+Stop containers:
+
+```bash
+docker compose down
+```
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
@@ -77,4 +95,4 @@ HF_TOKENS=your_huggingface_token_here
 - Multiple image sizes (1:1, 4:5, 16:9)
 - Generation history with view/delete
 - Offline fallback mode
-- Dark themed UI
+- White themed UI

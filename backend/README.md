@@ -22,6 +22,12 @@ This backend is built with FastAPI and follows the architecture in `docs/BACKEND
    pip install -r backend/requirements.txt
    ```
 
+   For Docker/runtime-only environments, use the lightweight set:
+
+   ```bash
+   pip install -r backend/requirements.runtime.txt
+   ```
+
 3. Copy env file:
 
    ```bash

@@ -10,7 +10,9 @@ from models.schemas import (
     GenerateImagesResponse,
     GeneratePostRequest,
     GeneratePostResponse,
+    GenerateTextRequest,
     HistoryItem,
+    SaveGenerationRequest,
 )
 from services.caption_service import generate_caption
 from services.image_service import generate_images
@@ -35,11 +37,14 @@ async def generate_caption_endpoint(payload: CaptionRequest) -> CaptionResponse:
 
 @router.post("/generate-images", response_model=GenerateImagesResponse)
 async def generate_images_endpoint(payload: GenerateImagesRequest) -> GenerateImagesResponse:
-    images = await generate_images(
-        prompt=payload.prompt,
-        size=payload.size,
-        num_images=payload.num_images,
-    )
+    try:
+        images = await generate_images(
+            prompt=payload.prompt,
+            size=payload.size,
+            num_images=payload.num_images,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     return GenerateImagesResponse(images=images)
 
 
@@ -47,11 +52,14 @@ async def generate_images_endpoint(payload: GenerateImagesRequest) -> GenerateIm
 async def generate_post_endpoint(payload: GeneratePostRequest) -> GeneratePostResponse:
     enhanced = await enhance_prompt(payload.prompt)
     caption, hashtags = await generate_caption(enhanced)
-    images = await generate_images(
-        prompt=enhanced,
-        size=payload.size,
-        num_images=payload.num_images,
-    )
+    try:
+        images = await generate_images(
+            prompt=enhanced,
+            size=payload.size,
+            num_images=payload.num_images,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     saved = save_generation_metadata(
         prompt=payload.prompt,
@@ -61,6 +69,50 @@ async def generate_post_endpoint(payload: GeneratePostRequest) -> GeneratePostRe
         images=images,
     )
 
+    return GeneratePostResponse(
+        id=saved.id,
+        prompt=saved.prompt,
+        enhanced_prompt=saved.enhanced_prompt,
+        caption=saved.caption,
+        hashtags=saved.hashtags,
+        images=saved.images,
+        created_at=saved.created_at,
+    )
+
+
+@router.post("/generate-text", response_model=GeneratePostResponse)
+async def generate_text_endpoint(payload: GenerateTextRequest) -> GeneratePostResponse:
+    enhanced = await enhance_prompt(payload.prompt) if payload.use_enhancement else payload.prompt
+    caption, hashtags = await generate_caption(enhanced)
+
+    saved = save_generation_metadata(
+        prompt=payload.prompt,
+        enhanced_prompt=enhanced,
+        caption=caption,
+        hashtags=hashtags,
+        images=[],
+    )
+
+    return GeneratePostResponse(
+        id=saved.id,
+        prompt=saved.prompt,
+        enhanced_prompt=saved.enhanced_prompt,
+        caption=saved.caption,
+        hashtags=saved.hashtags,
+        images=saved.images,
+        created_at=saved.created_at,
+    )
+
+
+@router.post("/save-generation", response_model=GeneratePostResponse)
+async def save_generation_endpoint(payload: SaveGenerationRequest) -> GeneratePostResponse:
+    saved = save_generation_metadata(
+        prompt=payload.prompt,
+        enhanced_prompt=payload.enhanced_prompt,
+        caption=payload.caption,
+        hashtags=payload.hashtags,
+        images=payload.images,
+    )
     return GeneratePostResponse(
         id=saved.id,
         prompt=saved.prompt,

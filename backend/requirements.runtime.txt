@@ -1,3 +1,6 @@
+# Runtime dependencies for backend Docker image.
+# Keep this file lean to avoid pulling heavy local-ML/GPU toolchains in production builds.
+
 # Core Framework
 fastapi==0.115.11
 uvicorn[standard]==0.34.0
@@ -20,17 +23,12 @@ redis==5.2.1
 
 # AI & ML APIs
 huggingface-hub>=1.5.0
-transformers
-torch
-diffusers
-accelerate
-safetensors
 replicate==1.0.6
 requests==2.32.3
 aiohttp==3.11.11
 
 # Cloud Storage
-boto3==1.35.76  # For AWS S3
+boto3==1.35.76
 cloudinary==1.41.0
 
 # Data Validation & Serialization
@@ -47,11 +45,3 @@ uuid6==2024.1.12
 # Monitoring & Logging
 loguru==0.7.3
 prometheus-fastapi-instrumentator==7.0.0
-streamlit==1.44.1
-
-# Development & Testing (optional - install with pip install -r requirements-dev.txt)
-pytest==8.3.4
-pytest-asyncio==0.24.0
-black==24.10.0
-isort==5.13.2
-flake8==7.1.1
